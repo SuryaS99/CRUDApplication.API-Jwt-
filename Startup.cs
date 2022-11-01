@@ -61,6 +61,12 @@ namespace CRUDApplication.API
                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                };
            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("All", policy => policy.RequireRole("Admin", "User"));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CRUDApplication.API", Version = "v1" });

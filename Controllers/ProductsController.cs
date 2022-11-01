@@ -13,7 +13,7 @@ namespace CRUDApplication.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;

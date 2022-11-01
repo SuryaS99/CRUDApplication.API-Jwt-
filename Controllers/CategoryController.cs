@@ -13,7 +13,7 @@ namespace CRUDApplication.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -23,22 +23,31 @@ namespace CRUDApplication.API.Controllers
             _context = context;
         }
 
-        [HttpGet("GetCategory")]
+        [Authorize(policy:"All")]
+        //[HttpGet("GetCategory")]
+        [HttpGet]
+        [Route("Categories")]
         public async Task<IEnumerable<Category>> GetCategory()
         {
-            var cat = await _context.categories.ToListAsync();
-            return cat;
+            var categories = await _context.categories.ToListAsync();
+            return categories;
 
         }
 
-        [HttpPost("GetCategoryById")]
+        [Authorize(policy: "All")]
+        //[HttpPost("GetCategoryById")]
+        [HttpGet]
+        [Route("Category/{id}")]
         public async Task<Category> GetCategoryById(int id)
         {
-            var cat = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
-            return cat;
+            var category = await _context.categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+            return category;
         }
 
-        [HttpPost("CreateCategory")]
+        [Authorize(Roles ="Admin")]
+        //[HttpPost("CreateCategory")]
+        [HttpPost]
+        [Route("Category")]
         public async Task<CategoryDto> CreateCategory(CategoryDto category)
         {
             //var cat = await _context.categories.SingleOrDefaultAsync();
@@ -50,30 +59,36 @@ namespace CRUDApplication.API.Controllers
             return category;
         }
 
-        [HttpPut("UpdateCategory")]
+        [Authorize(Roles = "Admin")]
+        //[HttpPut("UpdateCategory")]
+        [HttpPut]
+        [Route("Category/{id}")]
         public async Task<Category> UpdateCategory(int id, Category category)
         {
-            var cat = await _context.categories.SingleOrDefaultAsync(c => c.CategoryId == id);
+            var _category = await _context.categories.SingleOrDefaultAsync(c => c.CategoryId == id);
 
-            if (cat != null)
+            if (_category != null)
             {
-                cat.Name = category.Name;
+                _category.Name = category.Name;
             }
             await _context.SaveChangesAsync();
 
-            return cat;
+            return _category;
         }
 
-        [HttpDelete("DeleteCategory")]
+        [Authorize(Roles = "Admin")]
+        //[HttpDelete("DeleteCategory")]
+        [HttpDelete]
+        [Route("Category/{id}")]
         public async Task<Category> DeleteCategory(int id)
         {
-            var cat = await _context.categories.SingleOrDefaultAsync(c => c.CategoryId == id);
-            if (cat != null)
+            var category = await _context.categories.SingleOrDefaultAsync(c => c.CategoryId == id);
+            if (category != null)
             {
-                _context.categories.Remove(cat);
+                _context.categories.Remove(category);
                 await _context.SaveChangesAsync();
             }
-            return cat;
+            return category;
 
         }
         

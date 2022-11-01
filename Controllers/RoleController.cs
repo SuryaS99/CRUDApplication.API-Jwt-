@@ -13,7 +13,7 @@ namespace CRUDApplication.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly AppDbContext _context;
