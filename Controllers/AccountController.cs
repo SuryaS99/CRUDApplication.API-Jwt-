@@ -39,7 +39,7 @@ namespace CRUDApplication.API.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim("UserId", Convert.ToString(user.Id), ClaimValueTypes.Integer),
-                    new Claim("RoleId",Convert.ToString(user.RoleId), ClaimValueTypes.Integer),
+                    new Claim("RoleId", Convert.ToString(user.RoleId), ClaimValueTypes.Integer),
                     new Claim(ClaimTypes.Role, role.Name, ClaimValueTypes.String)
 
                 };

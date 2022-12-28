@@ -45,7 +45,7 @@ namespace CRUDApplication.API.Controllers
         [HttpGet("GetProducts")]
         public async Task<IEnumerable<ProductDto>> GetProducts()
         {
-            var pro = await (from p in _context.products
+            var product = await (from p in _context.products
                              join c in _context.categories on p.CategoryId equals c.CategoryId
                              select new ProductDto
                              {
@@ -53,33 +53,51 @@ namespace CRUDApplication.API.Controllers
                                   Name=p.ProductName,
                                  CategoryName = c.Name
                              }).ToListAsync();
-            return pro;
+            if (product != null)
+            {
+                return product;
+            }
+            return null;
         }
 
 
 
 
-        [HttpPost("CreateProduct")]
-        public async Task<bool> CreateProductAsync(Product product)
+        [HttpPost("Product")]
+        public async Task<Product> CreateProductAsync(Product product)
         {
             try
             {
                await _context.products.AddAsync(product);
                await _context.SaveChangesAsync();
-                return true;
+                return product;
             }
             catch (Exception ex)
             {
                 throw ex ;
             }
            
-           
-
-
-            //await _context.products.AddAsync(product);
-            // await _context.SaveChangesAsync();
-            //  return product;
-
         }
+        [HttpPut]
+        [Route("Product")]
+        public async Task<Product> UpdateProduct(ProductDto productDto)
+        {
+            var product = new Product();
+            product.ProductId = productDto.ProductId;
+            product.ProductName = productDto.Name;
+
+            await _context.products.FirstOrDefaultAsync(p => p.ProductId == productDto.ProductId);
+            if(product != null)
+            {
+                _context.Entry(productDto).State = EntityState.Modified;
+               // _context.products.Update(product);
+               await _context.SaveChangesAsync();
+                return product;
+            }
+            return null;
+            
+           
+        }
+
     }
 }
